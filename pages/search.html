@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TwinStar — Search</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/app.css" />
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo" style="padding:12px 14px;">
+      <img src="../logo.png" alt="TwinStar" style="width:140px;display:block;" />
+    </div>
+    <nav class="nav">
+      <a class="nav-link" data-page="dashboard" href="../dashboard.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <div class="nav-section">Documents</div>
+      <a class="nav-link" data-page="receipts" href="receipts.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Receipts</a>
+      <a class="nav-link" data-page="vouchers" href="vouchers.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Vouchers</a>
+      <a class="nav-link" data-page="search" href="search.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</a>
+      <div class="nav-section">HR</div>
+      <a class="nav-link" data-page="employees" href="employees.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Employees</a>
+      <a class="nav-link" data-page="salary" href="salary.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Salary Slips</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">—</div>
+      <div style="flex:1;overflow:hidden;"><div class="user-name" id="user-name">—</div><div id="user-email" style="font-size:11px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div></div>
+      <button class="btn-signout" onclick="signOut()" title="Sign out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <div class="topbar">
+      <div class="topbar-left"><span class="page-title">Search Documents</span></div>
+    </div>
+
+    <div class="page-content" style="max-width:760px;">
+
+      <!-- Search box -->
+      <div class="card mb-3" style="padding:28px;">
+        <div style="text-align:center;margin-bottom:24px;">
+          <div style="width:52px;height:52px;background:var(--brand-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h2 style="font-size:17px;font-weight:700;margin-bottom:4px;">Document Lookup</h2>
+          <p style="font-size:13px;color:var(--text-2);">Enter a receipt or voucher number to retrieve its details and attachment.</p>
+        </div>
+
+        <div style="display:flex;gap:10px;align-items:flex-end;">
+          <div class="form-group" style="flex:1;">
+            <label>Receipt or Voucher Number</label>
+            <div class="input-group">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="search-input" placeholder="e.g. REC-2026-0042 or VCH-2026-0011"
+                onkeydown="if(event.key==='Enter') doSearch()"
+                oninput="onInputChange()" autocomplete="off" spellcheck="false" />
+            </div>
+          </div>
+          <button class="btn btn-primary" style="padding:9px 22px;" onclick="doSearch()">
+            Search
+          </button>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;" id="quick-chips">
+          <span style="font-size:11px;color:var(--text-3);align-self:center;">Try:</span>
+          <button class="btn btn-sm" style="font-size:11px;font-family:monospace;" onclick="setAndSearch('REC')">REC-…</button>
+          <button class="btn btn-sm" style="font-size:11px;font-family:monospace;" onclick="setAndSearch('VCH')">VCH-…</button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div id="result-area"></div>
+
+      <!-- Recent searches -->
+      <div id="recent-section" class="card" style="display:none;">
+        <div class="card-header">
+          <span class="card-title">Recent lookups</span>
+          <button class="btn btn-sm" onclick="clearHistory()">Clear</button>
+        </div>
+        <div id="recent-list" style="padding:8px 0;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script>
+    setActiveNav('search');
+    const HISTORY_KEY = 'fd_search_history';
+
+    async function init() {
+      const session = await requireAuth();
+      if (!session) return;
+      const user = session.user;
+      const name = user.user_metadata?.full_name || user.email.split('@')[0];
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = user.email;
+      document.getElementById('user-avatar').textContent = initials(name);
+      renderHistory();
+
+      // Pre-fill from URL param ?q=
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      if (q) { document.getElementById('search-input').value = q; doSearch(); }
+    }
+
+    function onInputChange() {
+      const v = document.getElementById('search-input').value.trim();
+      if (!v) document.getElementById('result-area').innerHTML = '';
+    }
+
+    function setAndSearch(prefix) {
+      document.getElementById('search-input').value = prefix + '-';
+      document.getElementById('search-input').focus();
+    }
+
+    async function doSearch() {
+      const raw = document.getElementById('search-input').value.trim().toUpperCase();
+      if (!raw) { toast('Please enter a document number.', 'error'); return; }
+
+      document.getElementById('result-area').innerHTML =
+        `<div style="text-align:center;padding:40px;color:var(--text-3);">
+          <div class="spinner" style="margin:0 auto 10px;"></div>
+          <div style="font-size:13px;">Searching…</div>
+        </div>`;
+
+      const isReceipt = raw.startsWith('REC');
+      const isVoucher = raw.startsWith('VCH');
+
+      let results = [];
+
+      if (isReceipt || (!isReceipt && !isVoucher)) {
+        const { data } = await db.from('receipts')
+          .select('*').ilike('receipt_no', `%${raw}%`).limit(10);
+        if (data) results.push(...data.map(r => ({ ...r, _type: 'receipt', _num: r.receipt_no })));
+      }
+
+      if (isVoucher || (!isReceipt && !isVoucher)) {
+        const { data } = await db.from('vouchers')
+          .select('*').ilike('voucher_no', `%${raw}%`).limit(10);
+        if (data) results.push(...data.map(v => ({ ...v, _type: 'voucher', _num: v.voucher_no })));
+      }
+
+      // Save to history
+      saveHistory(raw);
+      renderHistory();
+
+      if (!results.length) {
+        document.getElementById('result-area').innerHTML =
+          `<div class="card" style="padding:40px;text-align:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;display:block;opacity:0.3;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h3 style="font-size:15px;font-weight:600;margin-bottom:6px;">No results for "${raw}"</h3>
+            <p style="font-size:13px;color:var(--text-2);">Check the number format: REC-YYYY-NNNN or VCH-YYYY-NNNN</p>
+          </div>`;
+        return;
+      }
+
+      const rows = results.map(r => {
+        const isR = r._type === 'receipt';
+        const status = isR ? `<span class="badge badge-${r.status === 'approved' ? 'success' : r.status === 'rejected' ? 'danger' : 'warning'}">${r.status}</span>` : `<span class="badge badge-info">${r.type}</span>`;
+        const attach = r.attachment_url
+          ? `<a href="${r.attachment_url}" target="_blank" class="btn btn-sm btn-success">
+               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+               Download
+             </a>`
+          : '<span class="no-attach" style="font-size:12px;">No attachment</span>';
+
+        return `<tr>
+          <td>
+            <span class="doc-number">${r._num}</span>
+            <div style="font-size:11px;color:var(--text-3);margin-top:2px;">${isR ? 'Receipt' : 'Voucher'}</div>
+          </td>
+          <td>${r.description}</td>
+          <td style="font-weight:600;">${fmtINR(r.amount)}</td>
+          <td>${fmtDate(r.date)}</td>
+          <td>${status}</td>
+          <td>${attach}</td>
+          <td>
+            <a href="${isR ? 'receipts.html' : 'vouchers.html'}" class="btn btn-sm">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Edit
+            </a>
+          </td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('result-area').innerHTML =
+        `<div class="card result-found mb-3">
+          <div class="card-header">
+            <span class="card-title">${results.length} result${results.length > 1 ? 's' : ''} for "${raw}"</span>
+          </div>
+          <table>
+            <thead><tr><th>Number</th><th>Description</th><th>Amount</th><th>Date</th><th>Status / Type</th><th>Attachment</th><th></th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+
+    // ── History ──────────────────────────────────────────────────────────
+    function saveHistory(q) {
+      let h = getHistory();
+      h = [q, ...h.filter(x => x !== q)].slice(0, 8);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+    }
+    function getHistory() {
+      try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
+    }
+    function clearHistory() {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+    }
+    function renderHistory() {
+      const h = getHistory();
+      const sec = document.getElementById('recent-section');
+      if (!h.length) { sec.style.display = 'none'; return; }
+      sec.style.display = 'block';
+      document.getElementById('recent-list').innerHTML = h.map(q =>
+        `<div style="padding:8px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;border-bottom:0.5px solid var(--border);" onclick="clickHistory('${q}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-3);flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span style="font-size:13px;font-family:monospace;color:var(--brand);">${q}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;color:var(--text-3);"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>`
+      ).join('').replace(/border-bottom[^;]*;([^"]*)"[^>]*>(?=[^<]*<\/div>\s*$)/, '$1">');
+      // Fix last row border
+      const items = document.querySelectorAll('#recent-list > div');
+      if (items.length) items[items.length-1].style.borderBottom = 'none';
+    }
+    function clickHistory(q) {
+      document.getElementById('search-input').value = q;
+      doSearch();
+    }
+
+    init();
+  </script>
+</body>
+</html>

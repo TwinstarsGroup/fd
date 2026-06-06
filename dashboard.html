@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TwinStar — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+
+  <!-- ── Sidebar ────────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo" style="padding:12px 14px;">
+      <img src="logo.png" alt="TwinStar" style="width:140px;display:block;" />
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" data-page="dashboard" href="dashboard.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+
+      <div class="nav-section">Documents</div>
+
+      <a class="nav-link" data-page="receipts" href="pages/receipts.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+        Receipts
+      </a>
+
+      <a class="nav-link" data-page="vouchers" href="pages/vouchers.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+        Vouchers
+      </a>
+
+      <a class="nav-link" data-page="search" href="pages/search.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search
+      </a>
+
+      <div class="nav-section">HR</div>
+
+      <a class="nav-link" data-page="employees" href="pages/employees.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Employees
+      </a>
+
+      <a class="nav-link" data-page="salary" href="pages/salary.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Salary Slips
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">—</div>
+      <div style="flex:1;overflow:hidden;">
+        <div class="user-name" id="user-name">Loading…</div>
+        <div class="user-role" id="user-email" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;"></div>
+      </div>
+      <button class="btn-signout" onclick="signOut()" title="Sign out">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────────────────── -->
+  <div class="main-wrap">
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="page-title">Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <a href="pages/receipts.html" class="btn btn-primary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Receipt
+        </a>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Stats -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Receipts</div>
+          <div class="stat-value" id="stat-receipts">—</div>
+          <div class="stat-sub" id="stat-receipts-sub"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Vouchers</div>
+          <div class="stat-value" id="stat-vouchers">—</div>
+          <div class="stat-sub" id="stat-vouchers-sub"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Employees</div>
+          <div class="stat-value" id="stat-employees">—</div>
+          <div class="stat-sub" id="stat-employees-sub"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Salary Slips Sent</div>
+          <div class="stat-value" id="stat-slips">—</div>
+          <div class="stat-sub">via EmailJS</div>
+        </div>
+      </div>
+
+      <!-- Recent Receipts -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <span class="card-title">Recent Receipts</span>
+          <a href="pages/receipts.html" class="btn btn-sm">View all</a>
+        </div>
+        <div id="recent-receipts">
+          <div style="padding:40px;text-align:center;color:var(--text-3);">
+            <div class="spinner" style="margin:0 auto 8px;"></div>
+            <div style="font-size:13px;">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Vouchers -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Recent Vouchers</span>
+          <a href="pages/vouchers.html" class="btn btn-sm">View all</a>
+        </div>
+        <div id="recent-vouchers">
+          <div style="padding:40px;text-align:center;color:var(--text-3);">
+            <div class="spinner" style="margin:0 auto 8px;"></div>
+            <div style="font-size:13px;">Loading…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script>
+    setActiveNav('dashboard');
+
+    async function loadDashboard() {
+      const session = await requireAuth();
+      if (!session) return;
+
+      // Set user info
+      const user = session.user;
+      const name = user.user_metadata?.full_name || user.email.split('@')[0];
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = user.email;
+      document.getElementById('user-avatar').textContent = initials(name);
+
+      // Load counts in parallel
+      const [rCount, vCount, eCount, sCount] = await Promise.all([
+        db.from('receipts').select('*', { count: 'exact', head: true }),
+        db.from('vouchers').select('*', { count: 'exact', head: true }),
+        db.from('employees').select('*', { count: 'exact', head: true }),
+        db.from('salary_slips').select('*', { count: 'exact', head: true }).not('emailed_at', 'is', null),
+      ]);
+
+      document.getElementById('stat-receipts').textContent   = rCount.count ?? 0;
+      document.getElementById('stat-vouchers').textContent   = vCount.count ?? 0;
+      document.getElementById('stat-employees').textContent  = eCount.count ?? 0;
+      document.getElementById('stat-slips').textContent      = sCount.count ?? 0;
+
+      // Recent receipts
+      const { data: receipts } = await db
+        .from('receipts').select('*')
+        .order('created_at', { ascending: false }).limit(5);
+
+      document.getElementById('recent-receipts').innerHTML = receipts && receipts.length
+        ? `<table>
+            <thead><tr><th>Receipt No.</th><th>Description</th><th>Amount</th><th>Date</th><th>Status</th><th>Attachment</th></tr></thead>
+            <tbody>${receipts.map(r => `
+              <tr>
+                <td><span class="doc-number">${r.receipt_no}</span></td>
+                <td>${r.description}</td>
+                <td>${fmtINR(r.amount)}</td>
+                <td>${fmtDate(r.date)}</td>
+                <td><span class="badge badge-${r.status === 'approved' ? 'success' : r.status === 'rejected' ? 'danger' : 'warning'}">${r.status}</span></td>
+                <td>${r.attachment_url
+                  ? `<a href="${r.attachment_url}" target="_blank" class="attachment-link">
+                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                       View
+                     </a>`
+                  : '<span class="no-attach">No file</span>'}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>`
+        : `<div class="empty-state"><p>No receipts yet.</p></div>`;
+
+      // Recent vouchers
+      const { data: vouchers } = await db
+        .from('vouchers').select('*')
+        .order('created_at', { ascending: false }).limit(5);
+
+      document.getElementById('recent-vouchers').innerHTML = vouchers && vouchers.length
+        ? `<table>
+            <thead><tr><th>Voucher No.</th><th>Description</th><th>Amount</th><th>Date</th><th>Type</th><th>Attachment</th></tr></thead>
+            <tbody>${vouchers.map(v => `
+              <tr>
+                <td><span class="doc-number">${v.voucher_no}</span></td>
+                <td>${v.description}</td>
+                <td>${fmtINR(v.amount)}</td>
+                <td>${fmtDate(v.date)}</td>
+                <td><span class="badge badge-info">${v.type}</span></td>
+                <td>${v.attachment_url
+                  ? `<a href="${v.attachment_url}" target="_blank" class="attachment-link">
+                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                       View
+                     </a>`
+                  : '<span class="no-attach">No file</span>'}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>`
+        : `<div class="empty-state"><p>No vouchers yet.</p></div>`;
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

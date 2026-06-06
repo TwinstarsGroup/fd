@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TwinStar — Vouchers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/app.css" />
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo" style="padding:12px 14px;">
+      <img src="../logo.png" alt="TwinStar" style="width:140px;display:block;" />
+    </div>
+    <nav class="nav">
+      <a class="nav-link" data-page="dashboard" href="../dashboard.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <div class="nav-section">Documents</div>
+      <a class="nav-link" data-page="receipts" href="receipts.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Receipts</a>
+      <a class="nav-link" data-page="vouchers" href="vouchers.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Vouchers</a>
+      <a class="nav-link" data-page="search" href="search.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</a>
+      <div class="nav-section">HR</div>
+      <a class="nav-link" data-page="employees" href="employees.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Employees</a>
+      <a class="nav-link" data-page="salary" href="salary.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Salary Slips</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">—</div>
+      <div style="flex:1;overflow:hidden;"><div class="user-name" id="user-name">—</div><div id="user-email" style="font-size:11px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div></div>
+      <button class="btn-signout" onclick="signOut()" title="Sign out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="page-title">Vouchers</span>
+        <span id="voucher-count" style="font-size:12px;color:var(--text-3);margin-left:8px;"></span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" onclick="openAddModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Voucher
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="filter-bar">
+        <div class="input-group" style="flex:1;max-width:340px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="search-input" placeholder="Search vouchers…" oninput="filterVouchers()" />
+        </div>
+        <select id="filter-type" onchange="filterVouchers()" style="width:160px;">
+          <option value="">All types</option>
+          <option value="payment">Payment</option>
+          <option value="receipt">Receipt Voucher</option>
+          <option value="journal">Journal</option>
+          <option value="cash">Cash</option>
+          <option value="contra">Contra</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <div id="vouchers-table">
+          <div style="padding:60px;text-align:center;color:var(--text-3);">
+            <div class="spinner" style="margin:0 auto 10px;"></div>
+            <div style="font-size:13px;">Loading vouchers…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal-backdrop" id="modal-add">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-title">Add Voucher</span>
+        <button class="btn-close" onclick="closeModal('modal-add')">×</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-id" />
+        <div style="background:var(--brand-light);color:var(--brand);font-size:12px;font-weight:600;padding:8px 12px;border-radius:var(--radius-sm);margin-bottom:16px;">
+          Voucher No. will be auto-generated: <span id="preview-number">VCH-YYYY-NNNN</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Description *</label>
+            <input type="text" id="f-desc" placeholder="e.g. Vendor payment" />
+          </div>
+          <div class="form-group">
+            <label>Amount (₹) *</label>
+            <input type="number" id="f-amount" placeholder="0.00" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label>Date *</label>
+            <input type="date" id="f-date" />
+          </div>
+          <div class="form-group">
+            <label>Voucher Type</label>
+            <select id="f-type">
+              <option value="payment">Payment</option>
+              <option value="receipt">Receipt Voucher</option>
+              <option value="journal">Journal</option>
+              <option value="cash">Cash</option>
+              <option value="contra">Contra</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Party / Payee</label>
+            <input type="text" id="f-party" placeholder="Vendor or party name" />
+          </div>
+          <div class="form-group">
+            <label>Attachment (PDF / JPG / PNG)</label>
+            <input type="file" id="f-file" accept=".pdf,.jpg,.jpeg,.png" />
+          </div>
+          <div class="form-group full">
+            <label>Narration / Notes</label>
+            <textarea id="f-notes" placeholder="Brief description of this voucher…"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-add')">Cancel</button>
+        <button class="btn btn-primary" id="save-btn" onclick="saveVoucher()">
+          <span id="save-label">Save Voucher</span>
+          <span id="save-spin" class="spinner hidden"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm -->
+  <div class="modal-backdrop" id="modal-delete">
+    <div class="modal" style="max-width:400px;">
+      <div class="modal-header">
+        <span class="modal-title">Delete Voucher</span>
+        <button class="btn-close" onclick="closeModal('modal-delete')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:14px;">Are you sure you want to delete <strong id="delete-num"></strong>? This cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-delete')">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script>
+    setActiveNav('vouchers');
+    let allVouchers = [];
+    let deleteId = null;
+
+    async function init() {
+      const session = await requireAuth();
+      if (!session) return;
+      const user = session.user;
+      const name = user.user_metadata?.full_name || user.email.split('@')[0];
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = user.email;
+      document.getElementById('user-avatar').textContent = initials(name);
+      document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+      await loadVouchers();
+    }
+
+    async function loadVouchers() {
+      const { data, error } = await db.from('vouchers').select('*').order('created_at', { ascending: false });
+      if (error) { toast('Failed to load vouchers: ' + error.message, 'error'); return; }
+      allVouchers = data || [];
+      document.getElementById('voucher-count').textContent = `${allVouchers.length} total`;
+      renderTable(allVouchers);
+    }
+
+    function renderTable(rows) {
+      const typeBadge = t => ({ payment:'badge-info', receipt:'badge-success', journal:'badge-warning', cash:'badge-gray', contra:'badge-danger' }[t] || 'badge-gray');
+      if (!rows.length) {
+        document.getElementById('vouchers-table').innerHTML =
+          `<div class="empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg><h3>No vouchers yet</h3><p>Click "Add Voucher" to get started.</p></div>`;
+        return;
+      }
+      document.getElementById('vouchers-table').innerHTML =
+        `<table>
+          <thead><tr><th>Voucher No.</th><th>Description</th><th>Party</th><th>Amount</th><th>Date</th><th>Type</th><th>Attachment</th><th></th></tr></thead>
+          <tbody>${rows.map(v => `
+            <tr>
+              <td><span class="doc-number">${v.voucher_no}</span></td>
+              <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${v.description}</td>
+              <td style="font-size:12px;color:var(--text-2);">${v.party || '—'}</td>
+              <td style="font-weight:600;">${fmtINR(v.amount)}</td>
+              <td>${fmtDate(v.date)}</td>
+              <td><span class="badge ${typeBadge(v.type)}">${v.type}</span></td>
+              <td>${v.attachment_url
+                ? `<a href="${v.attachment_url}" target="_blank" class="attachment-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>View</a>`
+                : '<span class="no-attach">—</span>'}</td>
+              <td>
+                <div class="flex gap-1">
+                  <button class="btn btn-sm btn-icon" onclick="editVoucher('${v.id}')" title="Edit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="btn btn-sm btn-icon btn-danger" onclick="deleteVoucher('${v.id}','${v.voucher_no}')" title="Delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>
+                </div>
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function filterVouchers() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      const t = document.getElementById('filter-type').value;
+      renderTable(allVouchers.filter(v =>
+        (!q || v.voucher_no.toLowerCase().includes(q) || v.description.toLowerCase().includes(q) || (v.party||'').toLowerCase().includes(q)) &&
+        (!t || v.type === t)
+      ));
+    }
+
+    async function openAddModal() {
+      document.getElementById('edit-id').value = '';
+      document.getElementById('modal-title').textContent = 'Add Voucher';
+      document.getElementById('save-label').textContent = 'Save Voucher';
+      ['f-desc','f-amount','f-party','f-notes'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('f-type').value = 'payment';
+      document.getElementById('f-file').value = '';
+      const num = await generateDocNumber('voucher');
+      document.getElementById('preview-number').textContent = num;
+      openModal('modal-add');
+    }
+
+    async function editVoucher(id) {
+      const v = allVouchers.find(x => x.id === id);
+      if (!v) return;
+      document.getElementById('edit-id').value = v.id;
+      document.getElementById('modal-title').textContent = 'Edit Voucher';
+      document.getElementById('save-label').textContent = 'Update Voucher';
+      document.getElementById('preview-number').textContent = v.voucher_no;
+      document.getElementById('f-desc').value = v.description;
+      document.getElementById('f-amount').value = v.amount;
+      document.getElementById('f-date').value = v.date;
+      document.getElementById('f-type').value = v.type;
+      document.getElementById('f-party').value = v.party || '';
+      document.getElementById('f-notes').value = v.notes || '';
+      document.getElementById('f-file').value = '';
+      openModal('modal-add');
+    }
+
+    async function saveVoucher() {
+      const desc   = document.getElementById('f-desc').value.trim();
+      const amount = parseFloat(document.getElementById('f-amount').value);
+      const date   = document.getElementById('f-date').value;
+      const type   = document.getElementById('f-type').value;
+      const party  = document.getElementById('f-party').value.trim();
+      const notes  = document.getElementById('f-notes').value.trim();
+      const file   = document.getElementById('f-file').files[0];
+      const editId = document.getElementById('edit-id').value;
+
+      if (!desc || !amount || !date) { toast('Description, amount and date are required.', 'error'); return; }
+
+      document.getElementById('save-label').textContent = 'Saving…';
+      document.getElementById('save-spin').classList.remove('hidden');
+      document.getElementById('save-btn').disabled = true;
+
+      try {
+        let attachment_url = null;
+        if (file) {
+          if (file.size > 5 * 1024 * 1024) throw new Error('File must be under 5MB.');
+          attachment_url = await uploadAttachment(file, 'attachments', 'vouchers');
+        }
+
+        if (editId) {
+          const updates = { description: desc, amount, date, type, party, notes };
+          if (attachment_url) updates.attachment_url = attachment_url;
+          const { error } = await db.from('vouchers').update(updates).eq('id', editId);
+          if (error) throw error;
+          toast('Voucher updated.', 'success');
+        } else {
+          const voucher_no = document.getElementById('preview-number').textContent;
+          const { error } = await db.from('vouchers').insert({ voucher_no, description: desc, amount, date, type, party, notes, attachment_url });
+          if (error) throw error;
+          toast('Voucher added: ' + voucher_no, 'success');
+        }
+        closeModal('modal-add');
+        await loadVouchers();
+      } catch (err) {
+        toast(err.message, 'error');
+      } finally {
+        document.getElementById('save-spin').classList.add('hidden');
+        document.getElementById('save-btn').disabled = false;
+        document.getElementById('save-label').textContent = editId ? 'Update Voucher' : 'Save Voucher';
+      }
+    }
+
+    function deleteVoucher(id, num) {
+      deleteId = id;
+      document.getElementById('delete-num').textContent = num;
+      openModal('modal-delete');
+    }
+
+    async function confirmDelete() {
+      if (!deleteId) return;
+      const { error } = await db.from('vouchers').delete().eq('id', deleteId);
+      if (error) { toast('Delete failed: ' + error.message, 'error'); return; }
+      toast('Voucher deleted.', 'success');
+      closeModal('modal-delete');
+      await loadVouchers();
+    }
+
+    init();
+  </script>
+</body>
+</html>

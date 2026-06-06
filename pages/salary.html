@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TwinStar — Salary Slips</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/app.css" />
+  <style>
+    .slip-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    @media (max-width: 900px) { .slip-col { grid-template-columns: 1fr; } }
+    .calc-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+    .calc-row:last-child { border-bottom: none; }
+    .net-row { background: var(--brand-light); border-radius: var(--radius-sm); padding: 12px 16px; display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; margin-top: 8px; }
+    .net-row span:last-child { color: var(--brand); }
+    .section-divider { height: 1px; background: var(--border); margin: 16px 0; }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo" style="padding:12px 14px;">
+      <img src="../logo.png" alt="TwinStar" style="width:140px;display:block;" />
+    </div>
+    <nav class="nav">
+      <a class="nav-link" data-page="dashboard" href="../dashboard.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <div class="nav-section">Documents</div>
+      <a class="nav-link" data-page="receipts" href="receipts.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Receipts</a>
+      <a class="nav-link" data-page="vouchers" href="vouchers.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Vouchers</a>
+      <a class="nav-link" data-page="search" href="search.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</a>
+      <div class="nav-section">HR</div>
+      <a class="nav-link" data-page="employees" href="employees.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Employees</a>
+      <a class="nav-link" data-page="salary" href="salary.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Salary Slips</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">—</div>
+      <div style="flex:1;overflow:hidden;"><div class="user-name" id="user-name">—</div><div id="user-email" style="font-size:11px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div></div>
+      <button class="btn-signout" onclick="signOut()" title="Sign out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <div class="topbar">
+      <div class="topbar-left"><span class="page-title">Salary Slips</span></div>
+      <div class="topbar-right">
+        <button class="btn btn-sm" onclick="showHistory()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          History
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="slip-col">
+
+        <!-- Generator Form -->
+        <div>
+          <div class="card mb-3">
+            <div class="card-header"><span class="card-title">Generate Salary Slip</span></div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="form-group full">
+                  <label>Employee *</label>
+                  <select id="f-emp" onchange="onEmployeeChange()">
+                    <option value="">— Select employee —</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Month *</label>
+                  <input type="month" id="f-month" />
+                </div>
+                <div class="form-group">
+                  <label>Working Days</label>
+                  <input type="number" id="f-days" value="26" min="1" max="31" oninput="recalc()" />
+                </div>
+              </div>
+
+              <div class="section-divider"></div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em;">Earnings</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Basic Salary (₹)</label>
+                  <input type="number" id="f-basic" placeholder="0" oninput="recalc()" />
+                </div>
+                <div class="form-group">
+                  <label>HRA (₹)</label>
+                  <input type="number" id="f-hra" placeholder="0" oninput="recalc()" />
+                </div>
+                <div class="form-group">
+                  <label>Special Allowance (₹)</label>
+                  <input type="number" id="f-special" placeholder="0" oninput="recalc()" />
+                </div>
+                <div class="form-group">
+                  <label>Other Allowances (₹)</label>
+                  <input type="number" id="f-other" placeholder="0" oninput="recalc()" />
+                </div>
+              </div>
+
+              <div class="section-divider"></div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em;">Deductions</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>PF (₹)</label>
+                  <input type="number" id="f-pf" placeholder="0" oninput="recalc()" />
+                </div>
+                <div class="form-group">
+                  <label>ESI (₹)</label>
+                  <input type="number" id="f-esi" placeholder="0" oninput="recalc()" />
+                </div>
+                <div class="form-group">
+                  <label>TDS (₹)</label>
+                  <input type="number" id="f-tds" placeholder="0" oninput="recalc()" />
+                </div>
+                <div class="form-group">
+                  <label>Other Deductions (₹)</label>
+                  <input type="number" id="f-deduct-other" placeholder="0" oninput="recalc()" />
+                </div>
+              </div>
+
+              <div class="section-divider"></div>
+              <!-- Live calc -->
+              <div>
+                <div class="calc-row"><span>Gross Earnings</span><span id="c-gross" style="font-weight:600;">₹0</span></div>
+                <div class="calc-row"><span>Total Deductions</span><span id="c-deduct" style="color:var(--danger);">₹0</span></div>
+                <div class="net-row"><span>Net Payable</span><span id="c-net">₹0</span></div>
+              </div>
+
+              <div style="display:flex;gap:10px;margin-top:20px;">
+                <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="generatePDF()" id="pdf-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  <span id="pdf-label">Download PDF</span>
+                </button>
+                <button class="btn btn-success" style="flex:1;justify-content:center;" onclick="emailSlip()" id="email-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <span id="email-label">Email via EmailJS</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text-2);">Preview</div>
+          <div id="slip-preview" class="slip-preview">
+            <div class="slip-header">
+              <div style="font-size:11px;opacity:0.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Salary Slip</div>
+              <h2 id="prev-name">—</h2>
+              <p id="prev-period">Select employee and month</p>
+            </div>
+            <div class="slip-meta">
+              <div class="slip-meta-item"><div class="slip-meta-label">Employee Code</div><div class="slip-meta-value" id="prev-code">—</div></div>
+              <div class="slip-meta-item"><div class="slip-meta-label">Department</div><div class="slip-meta-value" id="prev-dept">—</div></div>
+              <div class="slip-meta-item"><div class="slip-meta-label">Designation</div><div class="slip-meta-value" id="prev-role">—</div></div>
+              <div class="slip-meta-item"><div class="slip-meta-label">Working Days</div><div class="slip-meta-value" id="prev-days">—</div></div>
+            </div>
+            <table class="slip-table">
+              <thead><tr><th>Earnings</th><th style="text-align:right;">Amount</th><th>Deductions</th><th style="text-align:right;">Amount</th></tr></thead>
+              <tbody>
+                <tr><td>Basic Salary</td><td style="text-align:right;" id="prev-basic">₹0</td><td>PF</td><td style="text-align:right;" id="prev-pf">₹0</td></tr>
+                <tr><td>HRA</td><td style="text-align:right;" id="prev-hra">₹0</td><td>ESI</td><td style="text-align:right;" id="prev-esi">₹0</td></tr>
+                <tr><td>Special Allowance</td><td style="text-align:right;" id="prev-special">₹0</td><td>TDS</td><td style="text-align:right;" id="prev-tds">₹0</td></tr>
+                <tr><td>Other Allowances</td><td style="text-align:right;" id="prev-other">₹0</td><td>Other</td><td style="text-align:right;" id="prev-do">₹0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr class="slip-net"><td colspan="2">Net Payable</td><td colspan="2" style="text-align:right;" id="prev-net">₹0</td></tr>
+              </tfoot>
+            </table>
+            <div style="padding:12px 16px;font-size:11px;color:var(--text-3);">Generated by TwinStar · This is a computer-generated document.</div>
+          </div>
+
+          <!-- History table -->
+          <div id="history-section" class="card mt-3" style="display:none;">
+            <div class="card-header"><span class="card-title">Sent slips</span><button class="btn btn-sm" onclick="hideHistory()">Hide</button></div>
+            <div id="history-table"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script>
+    setActiveNav('salary');
+
+    // ── EmailJS config — replace these ──────────────────────────────────
+    const EMAILJS_PUBLIC_KEY  = 'YOUR_EMAILJS_PUBLIC_KEY';
+    const EMAILJS_SERVICE_ID  = 'YOUR_EMAILJS_SERVICE_ID';
+    const EMAILJS_TEMPLATE_ID = 'YOUR_EMAILJS_TEMPLATE_ID';
+    // ────────────────────────────────────────────────────────────────────
+
+    // ── Company details ─────────────────────────────────────────────────
+    const COMPANY_NAME    = 'Your Company Pvt. Ltd.';
+    const COMPANY_ADDRESS = 'Your Address, City, State';
+    // ────────────────────────────────────────────────────────────────────
+
+    let employees = [];
+    let selectedEmp = null;
+
+    async function init() {
+      const session = await requireAuth();
+      if (!session) return;
+      const user = session.user;
+      const name = user.user_metadata?.full_name || user.email.split('@')[0];
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = user.email;
+      document.getElementById('user-avatar').textContent = initials(name);
+
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+
+      // Default month = current
+      const now = new Date();
+      document.getElementById('f-month').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+      // Load employees
+      const { data } = await db.from('employees').select('*').eq('status','active').order('name');
+      employees = data || [];
+      const sel = document.getElementById('f-emp');
+      employees.forEach(e => {
+        const opt = document.createElement('option');
+        opt.value = e.id;
+        opt.textContent = `${e.name} (${e.emp_code || e.id.slice(0,6)})`;
+        sel.appendChild(opt);
+      });
+
+      // Pre-select from URL param
+      const params = new URLSearchParams(window.location.search);
+      const empId = params.get('emp');
+      if (empId) { sel.value = empId; onEmployeeChange(); }
+    }
+
+    function onEmployeeChange() {
+      const id = document.getElementById('f-emp').value;
+      selectedEmp = employees.find(e => e.id === id) || null;
+      if (selectedEmp) {
+        document.getElementById('f-basic').value = selectedEmp.basic_salary || '';
+        const basic = parseFloat(selectedEmp.basic_salary) || 0;
+        document.getElementById('f-hra').value = Math.round(basic * 0.4);
+        document.getElementById('f-special').value = Math.round(basic * 0.1);
+        document.getElementById('f-pf').value = Math.round(basic * 0.12);
+        document.getElementById('f-esi').value = 0;
+        document.getElementById('f-tds').value = 0;
+        document.getElementById('f-other').value = 0;
+        document.getElementById('f-deduct-other').value = 0;
+        updatePreviewMeta();
+        recalc();
+      }
+    }
+
+    function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+    function recalc() {
+      const gross = v('f-basic') + v('f-hra') + v('f-special') + v('f-other');
+      const deduct = v('f-pf') + v('f-esi') + v('f-tds') + v('f-deduct-other');
+      const net = gross - deduct;
+
+      document.getElementById('c-gross').textContent = fmtINR(gross);
+      document.getElementById('c-deduct').textContent = fmtINR(deduct);
+      document.getElementById('c-net').textContent = fmtINR(net);
+
+      // Update preview
+      ['basic','hra','special','other','pf','esi','tds'].forEach(k => {
+        document.getElementById('prev-'+k).textContent = fmtINR(v('f-'+k));
+      });
+      document.getElementById('prev-do').textContent = fmtINR(v('f-deduct-other'));
+      document.getElementById('prev-net').textContent = fmtINR(net);
+      document.getElementById('prev-days').textContent = document.getElementById('f-days').value;
+    }
+
+    function updatePreviewMeta() {
+      if (!selectedEmp) return;
+      document.getElementById('prev-name').textContent = selectedEmp.name;
+      document.getElementById('prev-code').textContent = selectedEmp.emp_code || '—';
+      document.getElementById('prev-dept').textContent = selectedEmp.department || '—';
+      document.getElementById('prev-role').textContent = selectedEmp.role || '—';
+
+      const m = document.getElementById('f-month').value;
+      if (m) {
+        const [y, mo] = m.split('-');
+        document.getElementById('prev-period').textContent =
+          new Date(+y, +mo-1).toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+      }
+    }
+
+    function getSlipData() {
+      const m = document.getElementById('f-month').value;
+      const [y, mo] = m ? m.split('-') : ['', ''];
+      const monthLabel = m ? new Date(+y, +mo-1).toLocaleString('en-IN', { month: 'long', year: 'numeric' }) : '';
+      return {
+        emp: selectedEmp,
+        month: monthLabel,
+        days: document.getElementById('f-days').value,
+        basic: v('f-basic'), hra: v('f-hra'),
+        special: v('f-special'), other: v('f-other'),
+        pf: v('f-pf'), esi: v('f-esi'),
+        tds: v('f-tds'), deductOther: v('f-deduct-other'),
+        gross: v('f-basic') + v('f-hra') + v('f-special') + v('f-other'),
+        deduct: v('f-pf') + v('f-esi') + v('f-tds') + v('f-deduct-other'),
+        net: v('f-basic') + v('f-hra') + v('f-special') + v('f-other') - v('f-pf') - v('f-esi') - v('f-tds') - v('f-deduct-other'),
+      };
+    }
+
+    function validate() {
+      if (!selectedEmp) { toast('Please select an employee.', 'error'); return false; }
+      if (!document.getElementById('f-month').value) { toast('Please select a month.', 'error'); return false; }
+      return true;
+    }
+
+    // ── PDF Generation ───────────────────────────────────────────────────
+    function generatePDF(returnDoc = false) {
+      if (!returnDoc && !validate()) return;
+      const d = getSlipData();
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+      const W = 210, PL = 20, PR = 190;
+      let y = 0;
+
+      // Header band
+      doc.setFillColor(24, 95, 165);
+      doc.rect(0, 0, W, 36, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(18); doc.setFont('helvetica','bold');
+      doc.text(COMPANY_NAME, PL, 14);
+      doc.setFontSize(10); doc.setFont('helvetica','normal');
+      doc.text(COMPANY_ADDRESS, PL, 21);
+      doc.setFontSize(13); doc.setFont('helvetica','bold');
+      doc.text('SALARY SLIP', PR, 14, { align: 'right' });
+      doc.setFontSize(10); doc.setFont('helvetica','normal');
+      doc.text(d.month, PR, 21, { align: 'right' });
+      y = 44;
+
+      // Employee info box
+      doc.setFillColor(240, 245, 255);
+      doc.rect(PL, y, 170, 28, 'F');
+      doc.setTextColor(50, 50, 50);
+      doc.setFontSize(9);
+      const cols = [
+        ['Employee Name', d.emp.name],
+        ['Employee Code', d.emp.emp_code || '—'],
+        ['Department', d.emp.department || '—'],
+        ['Designation', d.emp.role || '—'],
+        ['Working Days', d.days],
+        ['PAN', d.emp.pan || '—'],
+      ];
+      cols.forEach(([label, val], i) => {
+        const x = PL + (i % 3) * 57;
+        const ly = y + 8 + Math.floor(i / 3) * 12;
+        doc.setFont('helvetica','bold'); doc.setTextColor(100, 100, 100);
+        doc.text(label, x, ly);
+        doc.setFont('helvetica','normal'); doc.setTextColor(30, 30, 30);
+        doc.text(String(val), x, ly + 5);
+      });
+      y += 36;
+
+      // Earnings & Deductions table
+      doc.setFillColor(24, 95, 165);
+      doc.rect(PL, y, 170, 7, 'F');
+      doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','bold');
+      doc.text('EARNINGS', PL+2, y+4.5);
+      doc.text('AMOUNT', PL+82, y+4.5);
+      doc.text('DEDUCTIONS', PL+88, y+4.5);
+      doc.text('AMOUNT', PL+162, y+4.5, { align: 'right' });
+      y += 9;
+
+      const rows = [
+        ['Basic Salary', d.basic, 'Provident Fund (PF)', d.pf],
+        ['House Rent Allowance', d.hra, 'ESI', d.esi],
+        ['Special Allowance', d.special, 'TDS / Income Tax', d.tds],
+        ['Other Allowances', d.other, 'Other Deductions', d.deductOther],
+      ];
+      rows.forEach(([el, ea, dl, da], i) => {
+        if (i % 2 === 0) { doc.setFillColor(249, 250, 251); doc.rect(PL, y, 170, 7, 'F'); }
+        doc.setTextColor(50, 50, 50); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        doc.text(el, PL+2, y+4.5);
+        doc.text(fmtINR(ea), PL+83, y+4.5, { align: 'right' });
+        doc.text(dl, PL+90, y+4.5);
+        doc.text(fmtINR(da), PR, y+4.5, { align: 'right' });
+        y += 7;
+      });
+
+      // Totals
+      doc.setDrawColor(200,200,200);
+      doc.line(PL, y, PR, y);
+      y += 5;
+      doc.setFont('helvetica','bold'); doc.setFontSize(9);
+      doc.text('Gross Earnings', PL+2, y+4);
+      doc.text(fmtINR(d.gross), PL+83, y+4, { align: 'right' });
+      doc.text('Total Deductions', PL+90, y+4);
+      doc.text(fmtINR(d.deduct), PR, y+4, { align: 'right' });
+      y += 12;
+
+      // Net payable
+      doc.setFillColor(230, 241, 251);
+      doc.rect(PL, y, 170, 10, 'F');
+      doc.setTextColor(24, 95, 165); doc.setFontSize(11); doc.setFont('helvetica','bold');
+      doc.text('NET PAYABLE', PL+2, y+6.5);
+      doc.text(fmtINR(d.net), PR, y+6.5, { align: 'right' });
+      y += 18;
+
+      // Footer
+      doc.setFontSize(8); doc.setTextColor(150,150,150); doc.setFont('helvetica','normal');
+      doc.text('This is a computer-generated document and does not require a physical signature.', PL, y);
+      doc.text(`Generated on ${new Date().toLocaleDateString('en-IN')} by TwinStar`, PL, y+5);
+
+      if (returnDoc) return doc;
+      doc.save(`SalarySlip_${d.emp.name.replace(/\s+/g,'_')}_${d.month.replace(/\s+/g,'_')}.pdf`);
+      toast('PDF downloaded!', 'success');
+      saveSlipRecord(d);
+    }
+
+    // ── EmailJS ──────────────────────────────────────────────────────────
+    async function emailSlip() {
+      if (!validate()) return;
+      const d = getSlipData();
+      if (!d.emp.email) { toast('This employee has no email address on record.', 'error'); return; }
+
+      document.getElementById('email-label').textContent = 'Sending…';
+      document.getElementById('email-btn').disabled = true;
+
+      try {
+        // Generate PDF as base64
+        const doc = generatePDF(true);
+        const pdfBase64 = doc.output('datauristring'); // data:application/pdf;base64,...
+
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_name:    d.emp.name,
+          to_email:   d.emp.email,
+          month:      d.month,
+          emp_code:   d.emp.emp_code || '',
+          designation: d.emp.role || '',
+          basic:      fmtINR(d.basic),
+          hra:        fmtINR(d.hra),
+          special:    fmtINR(d.special),
+          gross:      fmtINR(d.gross),
+          pf:         fmtINR(d.pf),
+          tds:        fmtINR(d.tds),
+          deductions: fmtINR(d.deduct),
+          net:        fmtINR(d.net),
+          company:    COMPANY_NAME,
+          pdf_attachment: pdfBase64,
+        });
+
+        toast(`Salary slip emailed to ${d.emp.email}`, 'success');
+        await saveSlipRecord(d, true);
+      } catch (err) {
+        console.error(err);
+        toast('Email failed: ' + (err.text || err.message || 'Check EmailJS config.'), 'error');
+      } finally {
+        document.getElementById('email-label').textContent = 'Email via EmailJS';
+        document.getElementById('email-btn').disabled = false;
+      }
+    }
+
+    async function saveSlipRecord(d, emailed = false) {
+      const monthVal = document.getElementById('f-month').value;
+      await db.from('salary_slips').upsert({
+        employee_id: d.emp.id,
+        month: monthVal,
+        basic: d.basic, hra: d.hra, special_allowance: d.special,
+        other_allowance: d.other, pf: d.pf, esi: d.esi,
+        tds: d.tds, other_deductions: d.deductOther,
+        gross: d.gross, total_deductions: d.deduct, net: d.net,
+        working_days: parseInt(document.getElementById('f-days').value),
+        emailed_at: emailed ? new Date().toISOString() : null,
+      }, { onConflict: 'employee_id,month' });
+    }
+
+    // ── History ──────────────────────────────────────────────────────────
+    async function showHistory() {
+      const { data } = await db
+        .from('salary_slips')
+        .select('*, employees(name, emp_code, email)')
+        .order('created_at', { ascending: false })
+        .limit(30);
+
+      document.getElementById('history-section').style.display = 'block';
+      document.getElementById('history-table').innerHTML = data && data.length
+        ? `<table>
+            <thead><tr><th>Employee</th><th>Month</th><th>Net</th><th>Emailed</th></tr></thead>
+            <tbody>${data.map(s => `
+              <tr>
+                <td><span style="font-weight:600;">${s.employees?.name || '—'}</span><br><span style="font-size:11px;color:var(--text-3);">${s.employees?.emp_code || ''}</span></td>
+                <td>${s.month}</td>
+                <td style="font-weight:600;">${fmtINR(s.net)}</td>
+                <td>${s.emailed_at
+                  ? `<span class="badge badge-success">Sent ${fmtDate(s.emailed_at)}</span>`
+                  : '<span class="badge badge-gray">Not sent</span>'}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>`
+        : '<div class="empty-state"><p>No salary slips generated yet.</p></div>';
+    }
+
+    function hideHistory() {
+      document.getElementById('history-section').style.display = 'none';
+    }
+
+    document.getElementById('f-month').addEventListener('change', updatePreviewMeta);
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TwinStar — Employees</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/app.css" />
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo" style="padding:12px 14px;">
+      <img src="../logo.png" alt="TwinStar" style="width:140px;display:block;" />
+    </div>
+    <nav class="nav">
+      <a class="nav-link" data-page="dashboard" href="../dashboard.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <div class="nav-section">Documents</div>
+      <a class="nav-link" data-page="receipts" href="receipts.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Receipts</a>
+      <a class="nav-link" data-page="vouchers" href="vouchers.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Vouchers</a>
+      <a class="nav-link" data-page="search" href="search.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</a>
+      <div class="nav-section">HR</div>
+      <a class="nav-link" data-page="employees" href="employees.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Employees</a>
+      <a class="nav-link" data-page="salary" href="salary.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Salary Slips</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">—</div>
+      <div style="flex:1;overflow:hidden;"><div class="user-name" id="user-name">—</div><div id="user-email" style="font-size:11px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div></div>
+      <button class="btn-signout" onclick="signOut()" title="Sign out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="page-title">Employees</span>
+        <span id="emp-count" style="font-size:12px;color:var(--text-3);margin-left:8px;"></span>
+      </div>
+      <div class="topbar-right">
+        <div id="view-btns" style="display:flex;gap:4px;margin-right:4px;">
+          <button class="btn btn-sm btn-icon active-view" id="view-card" onclick="setView('card')" title="Card view">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </button>
+          <button class="btn btn-sm btn-icon" id="view-list" onclick="setView('list')" title="List view">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openAddModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Employee
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="filter-bar">
+        <div class="input-group" style="flex:1;max-width:340px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="search-input" placeholder="Search employees…" oninput="filterEmployees()" />
+        </div>
+        <select id="filter-dept" onchange="filterEmployees()" style="width:160px;">
+          <option value="">All departments</option>
+          <option value="engineering">Engineering</option>
+          <option value="finance">Finance</option>
+          <option value="operations">Operations</option>
+          <option value="sales">Sales</option>
+          <option value="hr">HR</option>
+          <option value="marketing">Marketing</option>
+          <option value="other">Other</option>
+        </select>
+        <select id="filter-status" onchange="filterEmployees()" style="width:130px;">
+          <option value="">All statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div id="employees-container">
+        <div style="padding:60px;text-align:center;color:var(--text-3);">
+          <div class="spinner" style="margin:0 auto 10px;"></div>
+          <div style="font-size:13px;">Loading employees…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal-backdrop" id="modal-add">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-title">Add Employee</span>
+        <button class="btn-close" onclick="closeModal('modal-add')">×</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-id" />
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="f-name" placeholder="e.g. Priya Sharma" />
+          </div>
+          <div class="form-group">
+            <label>Employee Code</label>
+            <input type="text" id="f-code" placeholder="Auto-generated" readonly style="background:#f9fafb;" />
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="f-email" placeholder="priya@company.com" />
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="f-phone" placeholder="+91 98765 43210" />
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+            <select id="f-dept">
+              <option value="engineering">Engineering</option>
+              <option value="finance">Finance</option>
+              <option value="operations">Operations</option>
+              <option value="sales">Sales</option>
+              <option value="hr">HR</option>
+              <option value="marketing">Marketing</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Role / Designation</label>
+            <input type="text" id="f-role" placeholder="e.g. Senior Engineer" />
+          </div>
+          <div class="form-group">
+            <label>Date of Joining</label>
+            <input type="date" id="f-doj" />
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="f-status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Basic Salary (₹)</label>
+            <input type="number" id="f-basic" placeholder="50000" min="0" />
+          </div>
+          <div class="form-group">
+            <label>Bank Account No.</label>
+            <input type="text" id="f-bank" placeholder="Account number" />
+          </div>
+          <div class="form-group">
+            <label>PAN Number</label>
+            <input type="text" id="f-pan" placeholder="ABCDE1234F" style="text-transform:uppercase;" />
+          </div>
+          <div class="form-group">
+            <label>PF Account</label>
+            <input type="text" id="f-pf" placeholder="PF account number" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-add')">Cancel</button>
+        <button class="btn btn-primary" id="save-btn" onclick="saveEmployee()">
+          <span id="save-label">Save Employee</span>
+          <span id="save-spin" class="spinner hidden"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirm -->
+  <div class="modal-backdrop" id="modal-delete">
+    <div class="modal" style="max-width:400px;">
+      <div class="modal-header">
+        <span class="modal-title">Remove Employee</span>
+        <button class="btn-close" onclick="closeModal('modal-delete')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:14px;">Are you sure you want to remove <strong id="delete-name"></strong>? Their salary history will be retained.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-delete')">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmDelete()">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script>
+    setActiveNav('employees');
+    let allEmployees = [];
+    let deleteId = null;
+    let currentView = 'card';
+
+    async function init() {
+      const session = await requireAuth();
+      if (!session) return;
+      const user = session.user;
+      const name = user.user_metadata?.full_name || user.email.split('@')[0];
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = user.email;
+      document.getElementById('user-avatar').textContent = initials(name);
+      await loadEmployees();
+    }
+
+    async function loadEmployees() {
+      const { data, error } = await db.from('employees').select('*').order('created_at', { ascending: false });
+      if (error) { toast('Failed to load: ' + error.message, 'error'); return; }
+      allEmployees = data || [];
+      document.getElementById('emp-count').textContent = `${allEmployees.length} employees`;
+      render(allEmployees);
+    }
+
+    function setView(v) {
+      currentView = v;
+      document.getElementById('view-card').style.background = v === 'card' ? 'var(--brand-light)' : '';
+      document.getElementById('view-list').style.background = v === 'list' ? 'var(--brand-light)' : '';
+      render(getFiltered());
+    }
+
+    function getFiltered() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      const d = document.getElementById('filter-dept').value;
+      const s = document.getElementById('filter-status').value;
+      return allEmployees.filter(e =>
+        (!q || e.name.toLowerCase().includes(q) || (e.emp_code||'').toLowerCase().includes(q) || (e.role||'').toLowerCase().includes(q)) &&
+        (!d || e.department === d) &&
+        (!s || e.status === s)
+      );
+    }
+
+    function filterEmployees() { render(getFiltered()); }
+
+    function render(rows) {
+      const container = document.getElementById('employees-container');
+      if (!rows.length) {
+        container.innerHTML = `<div class="empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><h3>No employees found</h3><p>Try adjusting your filters, or add a new employee.</p></div>`;
+        return;
+      }
+
+      if (currentView === 'card') {
+        container.innerHTML = `<div class="emp-grid">${rows.map(e => {
+          const [bg, fg] = avatarColor(e.name);
+          return `<div class="emp-card">
+            <div class="emp-avatar-lg" style="background:${bg};color:${fg};">${initials(e.name)}</div>
+            <div class="emp-name">${e.name}</div>
+            <div class="emp-role">${e.role || '—'}</div>
+            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">${e.department || ''} · ${e.emp_code || ''}</div>
+            <span class="badge badge-${e.status === 'active' ? 'success' : 'gray'}" style="margin-bottom:12px;">${e.status}</span>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-sm" onclick="editEmployee('${e.id}')">Edit</button>
+              <a href="salary.html?emp=${e.id}" class="btn btn-sm btn-success">Salary slip</a>
+            </div>
+          </div>`;
+        }).join('')}</div>`;
+      } else {
+        container.innerHTML = `<div class="card"><table>
+          <thead><tr><th>Employee</th><th>Code</th><th>Department</th><th>Role</th><th>Email</th><th>Joined</th><th>Status</th><th></th></tr></thead>
+          <tbody>${rows.map(e => {
+            const [bg, fg] = avatarColor(e.name);
+            return `<tr>
+              <td><div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:30px;height:30px;border-radius:50%;background:${bg};color:${fg};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${initials(e.name)}</div>
+                <span style="font-weight:600;">${e.name}</span>
+              </div></td>
+              <td><span style="font-family:monospace;font-size:12px;color:var(--brand);">${e.emp_code || '—'}</span></td>
+              <td><span class="badge badge-gray">${e.department || '—'}</span></td>
+              <td style="font-size:13px;color:var(--text-2);">${e.role || '—'}</td>
+              <td style="font-size:12px;">${e.email}</td>
+              <td style="font-size:12px;">${fmtDate(e.doj)}</td>
+              <td><span class="badge badge-${e.status === 'active' ? 'success' : 'gray'}">${e.status}</span></td>
+              <td><div class="flex gap-1">
+                <button class="btn btn-sm btn-icon" onclick="editEmployee('${e.id}')" title="Edit"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                <button class="btn btn-sm btn-icon btn-danger" onclick="deleteEmployee('${e.id}','${e.name}')" title="Remove"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>
+              </div></td>
+            </tr>`;
+          }).join('')}
+          </tbody></table></div>`;
+      }
+    }
+
+    async function generateEmpCode() {
+      const { count } = await db.from('employees').select('*', { count: 'exact', head: true });
+      return 'EMP-' + String((count || 0) + 1).padStart(4, '0');
+    }
+
+    async function openAddModal() {
+      document.getElementById('edit-id').value = '';
+      document.getElementById('modal-title').textContent = 'Add Employee';
+      document.getElementById('save-label').textContent = 'Save Employee';
+      ['f-name','f-email','f-phone','f-role','f-bank','f-pan','f-pf'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-basic').value = '';
+      document.getElementById('f-dept').value = 'engineering';
+      document.getElementById('f-status').value = 'active';
+      document.getElementById('f-doj').value = new Date().toISOString().split('T')[0];
+      document.getElementById('f-code').value = await generateEmpCode();
+      openModal('modal-add');
+    }
+
+    function editEmployee(id) {
+      const e = allEmployees.find(x => x.id === id);
+      if (!e) return;
+      document.getElementById('edit-id').value = e.id;
+      document.getElementById('modal-title').textContent = 'Edit Employee';
+      document.getElementById('save-label').textContent = 'Update Employee';
+      document.getElementById('f-name').value = e.name;
+      document.getElementById('f-email').value = e.email;
+      document.getElementById('f-phone').value = e.phone || '';
+      document.getElementById('f-code').value = e.emp_code || '';
+      document.getElementById('f-dept').value = e.department || 'other';
+      document.getElementById('f-role').value = e.role || '';
+      document.getElementById('f-doj').value = e.doj || '';
+      document.getElementById('f-status').value = e.status;
+      document.getElementById('f-basic').value = e.basic_salary || '';
+      document.getElementById('f-bank').value = e.bank_account || '';
+      document.getElementById('f-pan').value = e.pan || '';
+      document.getElementById('f-pf').value = e.pf_account || '';
+      openModal('modal-add');
+    }
+
+    async function saveEmployee() {
+      const name  = document.getElementById('f-name').value.trim();
+      const email = document.getElementById('f-email').value.trim();
+      if (!name || !email) { toast('Name and email are required.', 'error'); return; }
+
+      document.getElementById('save-label').textContent = 'Saving…';
+      document.getElementById('save-spin').classList.remove('hidden');
+      document.getElementById('save-btn').disabled = true;
+
+      const payload = {
+        name, email,
+        phone: document.getElementById('f-phone').value.trim(),
+        emp_code: document.getElementById('f-code').value.trim(),
+        department: document.getElementById('f-dept').value,
+        role: document.getElementById('f-role').value.trim(),
+        doj: document.getElementById('f-doj').value,
+        status: document.getElementById('f-status').value,
+        basic_salary: parseFloat(document.getElementById('f-basic').value) || null,
+        bank_account: document.getElementById('f-bank').value.trim(),
+        pan: document.getElementById('f-pan').value.trim().toUpperCase(),
+        pf_account: document.getElementById('f-pf').value.trim(),
+      };
+
+      const editId = document.getElementById('edit-id').value;
+      try {
+        if (editId) {
+          const { error } = await db.from('employees').update(payload).eq('id', editId);
+          if (error) throw error;
+          toast('Employee updated.', 'success');
+        } else {
+          const { error } = await db.from('employees').insert(payload);
+          if (error) throw error;
+          toast(`${name} added as ${payload.emp_code}.`, 'success');
+        }
+        closeModal('modal-add');
+        await loadEmployees();
+      } catch (err) {
+        toast(err.message, 'error');
+      } finally {
+        document.getElementById('save-spin').classList.add('hidden');
+        document.getElementById('save-btn').disabled = false;
+        document.getElementById('save-label').textContent = editId ? 'Update Employee' : 'Save Employee';
+      }
+    }
+
+    function deleteEmployee(id, name) {
+      deleteId = id;
+      document.getElementById('delete-name').textContent = name;
+      openModal('modal-delete');
+    }
+
+    async function confirmDelete() {
+      if (!deleteId) return;
+      const { error } = await db.from('employees').delete().eq('id', deleteId);
+      if (error) { toast('Failed: ' + error.message, 'error'); return; }
+      toast('Employee removed.', 'success');
+      closeModal('modal-delete');
+      await loadEmployees();
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TwinStar — Receipts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/app.css" />
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo" style="padding:12px 14px;">
+      <img src="../logo.png" alt="TwinStar" style="width:140px;display:block;" />
+    </div>
+    <nav class="nav">
+      <a class="nav-link" data-page="dashboard" href="../dashboard.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <div class="nav-section">Documents</div>
+      <a class="nav-link" data-page="receipts" href="receipts.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Receipts</a>
+      <a class="nav-link" data-page="vouchers" href="vouchers.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Vouchers</a>
+      <a class="nav-link" data-page="search" href="search.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</a>
+      <div class="nav-section">HR</div>
+      <a class="nav-link" data-page="employees" href="employees.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Employees</a>
+      <a class="nav-link" data-page="salary" href="salary.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Salary Slips</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">—</div>
+      <div style="flex:1;overflow:hidden;">
+        <div class="user-name" id="user-name">—</div>
+        <div id="user-email" style="font-size:11px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+      </div>
+      <button class="btn-signout" onclick="signOut()" title="Sign out">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrap">
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="page-title">Receipts</span>
+        <span id="receipt-count" style="font-size:12px;color:var(--text-3);margin-left:8px;"></span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-add')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Receipt
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="filter-bar">
+        <div class="input-group" style="flex:1;max-width:340px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="search-input" placeholder="Search receipts…" oninput="filterReceipts()" />
+        </div>
+        <select id="filter-status" onchange="filterReceipts()" style="width:140px;">
+          <option value="">All statuses</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <div id="receipts-table">
+          <div style="padding:60px;text-align:center;color:var(--text-3);">
+            <div class="spinner" style="margin:0 auto 10px;"></div>
+            <div style="font-size:13px;">Loading receipts…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Add/Edit Modal ── -->
+  <div class="modal-backdrop" id="modal-add">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-title">Add Receipt</span>
+        <button class="btn-close" onclick="closeModal('modal-add')">×</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-id" />
+        <div style="background:var(--brand-light);color:var(--brand);font-size:12px;font-weight:600;padding:8px 12px;border-radius:var(--radius-sm);margin-bottom:16px;">
+          Receipt No. will be auto-generated: <span id="preview-number">REC-YYYY-NNNN</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Description *</label>
+            <input type="text" id="f-desc" placeholder="e.g. Office supplies" />
+          </div>
+          <div class="form-group">
+            <label>Amount (₹) *</label>
+            <input type="number" id="f-amount" placeholder="0.00" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label>Date *</label>
+            <input type="date" id="f-date" />
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="f-status">
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="f-category">
+              <option value="general">General</option>
+              <option value="travel">Travel</option>
+              <option value="office">Office</option>
+              <option value="software">Software</option>
+              <option value="meals">Meals & Entertainment</option>
+              <option value="utilities">Utilities</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Attachment (PDF / JPG / PNG)</label>
+            <input type="file" id="f-file" accept=".pdf,.jpg,.jpeg,.png" />
+          </div>
+          <div class="form-group full">
+            <label>Notes</label>
+            <textarea id="f-notes" placeholder="Optional notes…"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-add')">Cancel</button>
+        <button class="btn btn-primary" id="save-btn" onclick="saveReceipt()">
+          <span id="save-label">Save Receipt</span>
+          <span id="save-spin" class="spinner hidden"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Delete Confirm Modal ── -->
+  <div class="modal-backdrop" id="modal-delete">
+    <div class="modal" style="max-width:400px;">
+      <div class="modal-header">
+        <span class="modal-title">Delete Receipt</span>
+        <button class="btn-close" onclick="closeModal('modal-delete')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:14px;">Are you sure you want to delete <strong id="delete-num"></strong>? This cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('modal-delete')">Cancel</button>
+        <button class="btn btn-danger" id="confirm-delete-btn" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script>
+    setActiveNav('receipts');
+    let allReceipts = [];
+    let deleteId = null;
+
+    async function init() {
+      const session = await requireAuth();
+      if (!session) return;
+      const user = session.user;
+      const name = user.user_metadata?.full_name || user.email.split('@')[0];
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = user.email;
+      document.getElementById('user-avatar').textContent = initials(name);
+
+      // Default date to today
+      document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+
+      await loadReceipts();
+    }
+
+    async function loadReceipts() {
+      const { data, error } = await db
+        .from('receipts').select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) { toast('Failed to load receipts: ' + error.message, 'error'); return; }
+      allReceipts = data || [];
+      document.getElementById('receipt-count').textContent = `${allReceipts.length} total`;
+      renderTable(allReceipts);
+    }
+
+    function renderTable(rows) {
+      if (!rows.length) {
+        document.getElementById('receipts-table').innerHTML =
+          `<div class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+            <h3>No receipts yet</h3>
+            <p>Click "Add Receipt" to create your first one.</p>
+          </div>`;
+        return;
+      }
+      document.getElementById('receipts-table').innerHTML =
+        `<table>
+          <thead><tr>
+            <th>Receipt No.</th><th>Description</th><th>Category</th>
+            <th>Amount</th><th>Date</th><th>Status</th><th>Attachment</th><th></th>
+          </tr></thead>
+          <tbody>${rows.map(r => `
+            <tr>
+              <td><span class="doc-number">${r.receipt_no}</span></td>
+              <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.description}</td>
+              <td><span class="badge badge-gray">${r.category || 'general'}</span></td>
+              <td style="font-weight:600;">${fmtINR(r.amount)}</td>
+              <td>${fmtDate(r.date)}</td>
+              <td><span class="badge badge-${r.status === 'approved' ? 'success' : r.status === 'rejected' ? 'danger' : 'warning'}">${r.status}</span></td>
+              <td>${r.attachment_url
+                ? `<a href="${r.attachment_url}" target="_blank" class="attachment-link">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                    View
+                   </a>`
+                : '<span class="no-attach">—</span>'}</td>
+              <td>
+                <div class="flex gap-1">
+                  <button class="btn btn-sm btn-icon" onclick="editReceipt('${r.id}')" title="Edit">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="btn btn-sm btn-icon btn-danger" onclick="deleteReceipt('${r.id}','${r.receipt_no}')" title="Delete">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function filterReceipts() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      const s = document.getElementById('filter-status').value;
+      const filtered = allReceipts.filter(r =>
+        (!q || r.receipt_no.toLowerCase().includes(q) || r.description.toLowerCase().includes(q)) &&
+        (!s || r.status === s)
+      );
+      renderTable(filtered);
+    }
+
+    async function openAddModal() {
+      document.getElementById('edit-id').value = '';
+      document.getElementById('modal-title').textContent = 'Add Receipt';
+      document.getElementById('save-label').textContent = 'Save Receipt';
+      document.getElementById('f-desc').value = '';
+      document.getElementById('f-amount').value = '';
+      document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('f-status').value = 'pending';
+      document.getElementById('f-category').value = 'general';
+      document.getElementById('f-notes').value = '';
+      document.getElementById('f-file').value = '';
+
+      const num = await generateDocNumber('receipt');
+      document.getElementById('preview-number').textContent = num;
+      openModal('modal-add');
+    }
+
+    // Override the generic openModal call for this button
+    document.querySelector('[onclick="openModal(\'modal-add\')"]').onclick = openAddModal;
+
+    async function editReceipt(id) {
+      const r = allReceipts.find(x => x.id === id);
+      if (!r) return;
+      document.getElementById('edit-id').value = r.id;
+      document.getElementById('modal-title').textContent = 'Edit Receipt';
+      document.getElementById('save-label').textContent = 'Update Receipt';
+      document.getElementById('preview-number').textContent = r.receipt_no;
+      document.getElementById('f-desc').value = r.description;
+      document.getElementById('f-amount').value = r.amount;
+      document.getElementById('f-date').value = r.date;
+      document.getElementById('f-status').value = r.status;
+      document.getElementById('f-category').value = r.category || 'general';
+      document.getElementById('f-notes').value = r.notes || '';
+      document.getElementById('f-file').value = '';
+      openModal('modal-add');
+    }
+
+    async function saveReceipt() {
+      const desc   = document.getElementById('f-desc').value.trim();
+      const amount = parseFloat(document.getElementById('f-amount').value);
+      const date   = document.getElementById('f-date').value;
+      const status = document.getElementById('f-status').value;
+      const category = document.getElementById('f-category').value;
+      const notes  = document.getElementById('f-notes').value.trim();
+      const file   = document.getElementById('f-file').files[0];
+      const editId = document.getElementById('edit-id').value;
+
+      if (!desc || !amount || !date) { toast('Description, amount and date are required.', 'error'); return; }
+
+      // Show loading
+      document.getElementById('save-label').textContent = 'Saving…';
+      document.getElementById('save-spin').classList.remove('hidden');
+      document.getElementById('save-btn').disabled = true;
+
+      try {
+        let attachment_url = null;
+
+        // Upload file if selected
+        if (file) {
+          if (file.size > 5 * 1024 * 1024) { throw new Error('File must be under 5MB.'); }
+          attachment_url = await uploadAttachment(file, 'attachments', 'receipts');
+        }
+
+        if (editId) {
+          // Update
+          const updates = { description: desc, amount, date, status, category, notes };
+          if (attachment_url) updates.attachment_url = attachment_url;
+          const { error } = await db.from('receipts').update(updates).eq('id', editId);
+          if (error) throw error;
+          toast('Receipt updated.', 'success');
+        } else {
+          // Insert
+          const receipt_no = document.getElementById('preview-number').textContent;
+          const { error } = await db.from('receipts').insert({
+            receipt_no, description: desc, amount, date, status, category, notes, attachment_url
+          });
+          if (error) throw error;
+          toast('Receipt added: ' + receipt_no, 'success');
+        }
+
+        closeModal('modal-add');
+        await loadReceipts();
+      } catch (err) {
+        toast(err.message, 'error');
+      } finally {
+        document.getElementById('save-label').textContent = editId ? 'Update Receipt' : 'Save Receipt';
+        document.getElementById('save-spin').classList.add('hidden');
+        document.getElementById('save-btn').disabled = false;
+      }
+    }
+
+    function deleteReceipt(id, num) {
+      deleteId = id;
+      document.getElementById('delete-num').textContent = num;
+      openModal('modal-delete');
+    }
+
+    async function confirmDelete() {
+      if (!deleteId) return;
+      const { error } = await db.from('receipts').delete().eq('id', deleteId);
+      if (error) { toast('Delete failed: ' + error.message, 'error'); return; }
+      toast('Receipt deleted.', 'success');
+      closeModal('modal-delete');
+      await loadReceipts();
+    }
+
+    init();
+  </script>
+</body>
+</html>
