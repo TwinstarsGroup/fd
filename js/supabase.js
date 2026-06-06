@@ -2,8 +2,8 @@
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 // Replace these with your actual Supabase project values
-const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+const SUPABASE_URL = 'https://lqaomzpyhgntfkthleuo.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable__s0-IYwN9ivc2VOYFQWzbg_NFHs_SQn';
 
 // ─── CLIENT ─────────────────────────────────────────────────────────────────
 const { createClient } = supabase;
