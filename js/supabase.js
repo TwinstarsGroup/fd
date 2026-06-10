@@ -18,7 +18,8 @@ async function getSession() {
 async function requireAuth() {
   const session = await getSession();
   if (!session) {
-    window.location.href = '/index.html';
+    const base = window.location.pathname.split('/').slice(0, 2).join('/');
+    window.location.href = base + '/index.html';
     return null;
   }
   return session;
@@ -26,7 +27,8 @@ async function requireAuth() {
 
 async function signOut() {
   await db.auth.signOut();
-  window.location.href = '/index.html';
+  const base = window.location.pathname.split('/').slice(0, 2).join('/');
+  window.location.href = base + '/index.html';
 }
 
 // ─── AUTO-NUMBER GENERATION ──────────────────────────────────────────────────
